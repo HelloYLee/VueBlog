@@ -1,0 +1,64 @@
+自定义组件Exmaple.vue
+<template>
+  <div id="child">
+  This is an example
+  <div>
+<template>
+<script>
+  method: {
+    get() {
+     console.log('get an example")
+    }
+  }
+</script>
+
+在demo中引用这个组件
+demo.vue
+<template>
+   <div v-if="add">
+     <example ref="test1"></example>
+   <div>
+   <div v-else>
+     <example ref="test2"></example>
+   </div>
+<template>
+
+<script>
+.... 
+data () {
+  return {
+    add: true
+  }
+}
+  methods: {
+   test() {
+     if (add) {
+       this.$refs.test1.get()
+     } else {
+       this.$refs.test2.get()
+     }
+   }
+  }
+....
+</script>
+
+当调用this.refs.test1.get()时，console抛出exception，显示无法找到this.$refs.test1(),console.log打印this.$refs时发现，只能找到test2,不能找到test1
+
+原因不知
+
+其中一个解决方法就是
+用div包裹example组件
+<template>
+   <div v-if="add">
+     <div id="test1">
+       <example ref="test1"></example>
+     </div>
+   <div>
+   <div v-else>
+     <div id="test2">
+       <example ref="test2"></example>
+     </div>
+   </div>
+<template>
+
+这样就能正确引用各自的ref
