@@ -1,0 +1,47 @@
+d2项目中需要使用splitpane分割页面
+
+正常页面都是使用d2-container作为外层页面，这样splitpane使用时，可以随意调节上下方页面大小
+
+现在需要在d2-container中再次构建el-aside作为菜单栏，右边作为el-main栏。el-main中同时需要使用splitpane分割上下层页面。结果遇到了问题：
+    调节上下页面大小时发现，下面的页面缩小时，会自适应改变高度，右边出现滑杆。页面高度变大，不再是想要的100%
+    
+解决方案：
+    查看了d2-container的css，发现d2-container实现高度固定的方法，是使用了两层div,外层div位置固定，设置好页面位置；内层div位置为相对位置，且overflow设置为auto。如下
+    
+    
+<template>
+  <div class="parent">
+    <div class="child">
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.parent {
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  bottom: 0px;
+  left: 100px; // 左侧有菜单栏，宽度固定为100px，预留
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.child {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 100%;
+  padding: 0px 0px 0px 5px; // 左侧预留一些空隙
+  overflow: auto;
+  position: relative;
+}
+</style>
+
+若结构中还存在子菜单，也可以使用同样方法布局
